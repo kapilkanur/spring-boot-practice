@@ -16,5 +16,5 @@ public class AuthorDTO {
 
     @NotEmpty
     private String bio;
-    
+
 }
