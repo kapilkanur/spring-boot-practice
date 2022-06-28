@@ -1,5 +1,6 @@
 package com.kk.springbootpractice.authors.service;
 
+import com.google.common.collect.Lists;
 import com.kk.springbootpractice.authors.dto.AuthorDTO;
 import com.kk.springbootpractice.authors.entity.Author;
 import com.kk.springbootpractice.authors.repository.AuthorRepository;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,5 +41,19 @@ public class AuthorService {
         AuthorDTO authorDTO = new AuthorDTO();
         BeanUtils.copyProperties(author.get(), authorDTO);
         return authorDTO;
+    }
+
+    public List<AuthorDTO> getAllAuthors() {
+        List<Author> authors = Lists.newArrayList(authorRepository.findAll());
+        if (authors.isEmpty()) {
+            throw new NoResultException("No authors found");
+        }
+        List<AuthorDTO> authorsDTO = new ArrayList<>();
+        authors.forEach(author -> {
+            AuthorDTO authorDTO = new AuthorDTO();
+            BeanUtils.copyProperties(author, authorDTO);
+            authorsDTO.add(authorDTO);
+        });
+        return authorsDTO;
     }
 }
