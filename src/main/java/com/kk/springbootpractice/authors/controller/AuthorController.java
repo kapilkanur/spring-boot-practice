@@ -3,6 +3,7 @@ package com.kk.springbootpractice.authors.controller;
 import com.kk.springbootpractice.authors.dto.AuthorDTO;
 import com.kk.springbootpractice.authors.service.AuthorService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,12 +28,22 @@ public class AuthorController {
         }
     }
 
+    @GetMapping(name = "Get author by id", value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAuthorById(@PathVariable @Positive(message = "Invalid id") int id) {
+        try {
+            return new ResponseEntity<>(authorService.getAuthorById(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
     @GetMapping(name = "Get authors", value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAuthors() {
         try {
             return new ResponseEntity<>(authorService.getAllAuthors(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

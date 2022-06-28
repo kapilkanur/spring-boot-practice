@@ -43,6 +43,16 @@ public class AuthorService {
         return authorDTO;
     }
 
+    public AuthorDTO getAuthorById(int id) {
+        Optional<Author> author = authorRepository.findById(id);
+        if (!author.isPresent()) {
+            throw new NoResultException("No records for the Author with the id : " + id);
+        }
+        AuthorDTO authorDTO = new AuthorDTO();
+        BeanUtils.copyProperties(author.get(), authorDTO);
+        return authorDTO;
+    }
+
     public List<AuthorDTO> getAllAuthors() {
         List<Author> authors = Lists.newArrayList(authorRepository.findAll());
         if (authors.isEmpty()) {
